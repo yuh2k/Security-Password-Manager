@@ -9,7 +9,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-app.secret_key = 'TEST_KEY'
+app.secret_key = os.environ.get('FLASK_APP_SECRET_KEY')
 app.config["MONGO_URI"] = "mongodb://localhost:27017/passwordManagerDB"
 mongo = PyMongo(app)
 try:
@@ -22,12 +22,12 @@ except:
 def index():
     return "Welcome to the Security+ Password Manager"
 
-# 配置OAuth
+# OAuth
 oauth = OAuth(app)
 google = oauth.register(
     name='google',
-    client_id='616979386644-q631gp05jl84popmo485hj8sul6pjuv0.apps.googleusercontent.com',
-    client_secret='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',
+    client_id=os.environ.get('GOOGLE_CLIENT_ID'),
+    client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
     access_token_url='https://accounts.google.com/o/oauth2/token',
     access_token_params=None,
     authorize_url='https://accounts.google.com/o/oauth2/auth',
