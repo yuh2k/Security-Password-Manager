@@ -1,0 +1,11 @@
+Authlib
+Flask
+request
+jsonify
+redirect
+url_for
+flask_pymongo
+bson
+bcrypt
+authlib
+flask-cors
