@@ -9,3 +9,4 @@ bson
 bcrypt
 authlib
 flask-cors
+python-dotenv

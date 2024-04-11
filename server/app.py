@@ -4,12 +4,14 @@ from bson.objectid import ObjectId
 import bcrypt
 from authlib.integrations.flask_client import OAuth
 from flask import Flask, redirect, url_for, session
-from utils import encrypt
+from utils.encrypt import encrypt_password
 from flask_cors import CORS
 import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app)
+load_dotenv()
 app.secret_key = os.environ.get('FLASK_APP_SECRET_KEY')
 app.config["MONGO_URI"] = "mongodb://localhost:27017/passwordManagerDB"
 mongo = PyMongo(app)
@@ -79,7 +81,7 @@ def encrypt_and_save():
     user = users.find_one({'username': username})
     if user:
         # Encrypt new string (website + password)
-        encrypted_password = encrypt(preferred_password + url)
+        encrypted_password = encrypt_password(url + preferred_password)
         # Save the encrypt password to DB
         users.update_one({'_id': user['_id']}, {'$push': {'websites': {'url': url, 'passwordHash': encrypted_password}}})
         return jsonify({"message": "Password encrypted and saved successfully"}), 200
@@ -87,7 +89,7 @@ def encrypt_and_save():
     return jsonify({"message": "User not found"}), 404
 
 
-@app.route('/get-password', methods=['POST'])
+@app.route('/get-password', methods=['GET'])
 def get_password():
     username = request.json['username']
     preferred_password = request.json['password']
@@ -95,7 +97,7 @@ def get_password():
 
     user = mongo.db.users.find_one({'username': username})
     if user:
-        encrypted_password = encrypt(preferred_password + url)
+        encrypted_password = encrypt_password(preferred_password + url)
         for website in user.get('websites', []):
             if website['url'] == url and website['passwordHash'] == encrypted_password:
                 return jsonify({"encryptedPassword": encrypted_password}), 200
@@ -105,3 +107,5 @@ def get_password():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
