@@ -8,6 +8,7 @@ from utils.encrypt import encrypt_password
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
+import hashlib
 
 app = Flask(__name__)
 CORS(app)
