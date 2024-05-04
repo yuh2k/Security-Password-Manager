@@ -90,13 +90,13 @@ def encrypt_and_save():
 
 @app.route('/get-password', methods=['GET'])
 def get_password():
-    username = request.json['username']
+    email = request.json['email']
     preferred_password = request.json['password']
     url = request.json['url']
 
-    user = mongo.db.users.find_one({'username': username})
+    user = mongo.db.users.find_one({'email': email})
     if user:
-        encrypted_password = encrypt_password(preferred_password + url)
+        encrypted_password = encrypt_password(url + preferred_password)
         for website in user.get('websites', []):
             if website['url'] == url and website['passwordHash'] == encrypted_password:
                 return jsonify({"encryptedPassword": encrypted_password}), 200
