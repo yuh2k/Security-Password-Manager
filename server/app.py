@@ -46,6 +46,7 @@ def login():
     redirect_uri = url_for('authorize', _external=True)
     return google.authorize_redirect(redirect_uri)
 
+
 @app.route('/auth/callback')
 def authorize():
     token = google.authorize_access_token()
@@ -104,6 +105,32 @@ def get_password():
         return jsonify({"message": "No matching encrypted password found"}), 404
     else:
         return jsonify({"message": "User not found"}), 404
+
+def get_password_sha1_hash(password):
+    sha1 = hashlib.sha1()
+    sha1.update(password.encode('utf-8'))
+    return sha1.hexdigest().upper()
+
+@app.route('/check-password-leak', methods=['POST'])
+def check_password_leak():
+    """ Check password"""
+    password = request.json.get('password')
+    if not password:
+        return jsonify({"message": "Password is required"}), 400
+
+    sha1_hash = get_password_sha1_hash(password)
+    prefix = sha1_hash[:5]
+    suffix = sha1_hash[5:]
+    
+    response = requests.get(f'https://api.pwnedpasswords.com/range/{prefix}')
+    if response.status_code == 200:
+        hashes = (line.split(':') for line in response.text.splitlines())
+        for hash_suffix, count in hashes:
+            if hash_suffix == suffix:
+                return jsonify({"message": "Password has been leaked", "leak_count": count}), 200
+        return jsonify({"message": "Password has not been leaked"}), 200
+    else:
+        return jsonify({"message": "Error fetching data from pwnedpasswords.com"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
