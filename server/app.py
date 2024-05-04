@@ -71,25 +71,21 @@ def authorize():
     return redirect(url_for('index'))
 
 
-
-
 @app.route('/encrypt-and-save', methods=['POST'])
 def encrypt_and_save():
     users = mongo.db.users
-    # Get username, password and current url
-    username = request.json['username']
+    email = request.json['email'] 
     preferred_password = request.json['password']
     url = request.json['url']
 
-    user = users.find_one({'username': username})
+    user = users.find_one({'email': email})  
     if user:
-        # Encrypt new string (website + password)
         encrypted_password = encrypt_password(url + preferred_password)
-        # Save the encrypt password to DB
         users.update_one({'_id': user['_id']}, {'$push': {'websites': {'url': url, 'passwordHash': encrypted_password}}})
         return jsonify({"message": "Password encrypted and saved successfully"}), 200
 
     return jsonify({"message": "User not found"}), 404
+
 
 
 @app.route('/get-password', methods=['GET'])
