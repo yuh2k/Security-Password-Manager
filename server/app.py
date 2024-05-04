@@ -9,6 +9,7 @@ from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 import hashlib
+import requests
 
 app = Flask(__name__)
 CORS(app)
