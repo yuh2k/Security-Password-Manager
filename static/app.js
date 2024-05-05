@@ -21,16 +21,16 @@ document.getElementById('savePasswordForm').onsubmit = async function(event) {
 
 document.getElementById('getPasswordForm').onsubmit = async function(event) {
     event.preventDefault();
-    const username = document.getElementById('username').value;
+    const email = document.getElementById('get_email').value;
     const password = document.getElementById('get_password').value;
     const url = document.getElementById('get_url').value;
-
-    const response = await fetch('/get-password', {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({username, password, url})
+    const queryParams = new URLSearchParams({email, password, url}).toString();
+    const fetchUrl = `/get-password?${queryParams}`;
+    const response = await fetch(fetchUrl, {
+        method: 'GET'
     });
     const data = await response.json();
+    document.getElementById('getPasswordResult').textContent = data.message;
     alert(data.message);
 };
 
@@ -44,5 +44,6 @@ document.getElementById('checkPasswordLeakForm').onsubmit = async function(event
         body: JSON.stringify({password})
     });
     const data = await response.json();
+    document.getElementById('checkPasswordLeakResult').textContent = data.message;
     alert(data.message);
 };
