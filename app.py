@@ -89,7 +89,7 @@ def encrypt_and_save():
 
     return jsonify({"message": "User not found"}), 404
 
-@app.route('/get-password', methods=['GET'])
+@app.route('/get-password', methods=['POST'])
 def get_password():
     if 'user_email' not in session:
         return jsonify({"message": "User is not logged in"}), 401
@@ -102,10 +102,11 @@ def get_password():
         encrypted_password = encrypt_password(url + preferred_password)
         for website in user.get('websites', []):
             if website['url'] == url and website['passwordHash'] == encrypted_password:
-                return jsonify({"encryptedPassword": encrypted_password}), 200
+                return jsonify({"encryptedPassword": encrypted_password, "message": "Password found"}), 200
         return jsonify({"message": "No matching encrypted password found"}), 404
     else:
         return jsonify({"message": "User not found"}), 404
+
 
 
 def get_password_sha1_hash(password):
@@ -115,7 +116,6 @@ def get_password_sha1_hash(password):
 
 @app.route('/check-password-leak', methods=['POST'])
 def check_password_leak():
-    """ Check password"""
     password = request.json.get('password')
     if not password:
         return jsonify({"message": "Password is required"}), 400
@@ -130,9 +130,10 @@ def check_password_leak():
         for hash_suffix, count in hashes:
             if hash_suffix == suffix:
                 return jsonify({"message": "Password has been leaked", "leak_count": count}), 200
-        return jsonify({"message": "Password has not been leaked"}), 200
+        return jsonify({"message": "Password has not been leaked", "leak_count": "0"}), 200
     else:
         return jsonify({"message": "Error fetching data from pwnedpasswords.com"}), 500
+
 
 @app.route('/check-login', methods=['GET'])
 def check_login():

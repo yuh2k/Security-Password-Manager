@@ -8,11 +8,11 @@ window.onload = function() {
     .then(response => response.json())
     .then(data => {
         if (data.loggedIn) {
-            document.getElementById('content').style.display = 'block'; // 显示内容
-            document.getElementById('loginButton').style.display = 'none'; // 隐藏登录按钮
+            document.getElementById('content').style.display = 'block'; 
+            document.getElementById('loginButton').style.display = 'none'; 
         } else {
-            document.getElementById('content').style.display = 'none'; // 隐藏内容
-            document.getElementById('loginButton').style.display = 'block'; // 显示登录按钮
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('loginButton').style.display = 'block';
         }
     });
 };
@@ -47,12 +47,16 @@ document.getElementById('getPasswordForm').onsubmit = async function(event) {
     const url = document.getElementById('get_url').value;
 
     const response = await fetch('/get-password', {
-        method: 'GET',
+        method: 'POST',  // 注意这里改为POST，与后端保持一致
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({password, url})  
+        body: JSON.stringify({password, url})
     });
     const data = await response.json();
-    alert(data.message);
+    if (response.ok) {
+        alert("Encrypted Password: " + data.encryptedPassword);
+    } else {
+        alert("Error: " + data.message);
+    }
 };
 
 
@@ -66,5 +70,11 @@ document.getElementById('checkPasswordLeakForm').onsubmit = async function(event
         body: JSON.stringify({password})
     });
     const data = await response.json();
-    alert(data.message);
+    if (response.ok) {
+        alert("Password has been leaked " + data.leak_count + " times");
+    } else {
+        alert("Error: " + data.message);
+    }
 };
+
+
