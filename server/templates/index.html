@@ -14,19 +14,19 @@
         Email: <input type="email" id="email" required><br>
         Password: <input type="password" id="password" required><br>
         URL: <input type="text" id="url" required><br>
-        <a href="/encrypt-and-save" class="button">Save Password</a>
+        <button type="submit" class="button">Save Password</button>
     </form>
     <h2>Get Encrypted Password</h2>
     <form id="getPasswordForm">
         Username: <input type="text" id="username" required><br>
         Password: <input type="password" id="get_password" required><br>
         URL: <input type="text" id="get_url" required><br>
-        <a href="/get-password" class="button">Get Password</a>
+        <button type="submit" class="button">Get Password</button>
     </form>
     <h2>Check Password Leak</h2>
     <form id="checkPasswordLeakForm">
         Password: <input type="password" id="leak_password" required><br>
-        <a href="/check-password-leak" class="button">Get Password</a>
+        <button type="submit" class="button">Check Password Leak</button>
     </form>
 
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
