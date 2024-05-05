@@ -55,9 +55,10 @@ def authorize():
     token = google.authorize_access_token()
     resp = google.get('userinfo')
     user_info = resp.json()
-    
+
     email = user_info.get('email')
     if email:
+        session['user_email'] = email 
         user = mongo.db.users.find_one({'email': email})
         if user:
             print('Existing user:', email)
@@ -71,14 +72,15 @@ def authorize():
         return jsonify({"message": "Failed to get user email from Google"}), 400
     return redirect(url_for('index'))
 
-
 @app.route('/encrypt-and-save', methods=['POST'])
 def encrypt_and_save():
-    users = mongo.db.users
-    email = request.json['email'] 
+    if 'user_email' not in session:
+        return jsonify({"message": "User is not logged in"}), 401
+    email = session['user_email']
     preferred_password = request.json['password']
     url = request.json['url']
 
+    users = mongo.db.users
     user = users.find_one({'email': email})  
     if user:
         encrypted_password = encrypt_password(url + preferred_password)
@@ -87,11 +89,11 @@ def encrypt_and_save():
 
     return jsonify({"message": "User not found"}), 404
 
-
-
 @app.route('/get-password', methods=['GET'])
 def get_password():
-    email = request.json['email']
+    if 'user_email' not in session:
+        return jsonify({"message": "User is not logged in"}), 401
+    email = session['user_email']
     preferred_password = request.json['password']
     url = request.json['url']
 
@@ -104,6 +106,7 @@ def get_password():
         return jsonify({"message": "No matching encrypted password found"}), 404
     else:
         return jsonify({"message": "User not found"}), 404
+
 
 def get_password_sha1_hash(password):
     sha1 = hashlib.sha1()
@@ -130,6 +133,19 @@ def check_password_leak():
         return jsonify({"message": "Password has not been leaked"}), 200
     else:
         return jsonify({"message": "Error fetching data from pwnedpasswords.com"}), 500
+
+@app.route('/check-login', methods=['GET'])
+def check_login():
+    if 'user_email' in session:
+        return jsonify(loggedIn=True, email=session['user_email'])
+    else:
+        return jsonify(loggedIn=False)
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('user_email', None)
+    return jsonify(success=True)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
