@@ -1,1 +1,4 @@
 # Security-Password-Manager
+
+Our project is about making a new kind of password manager that works as a browser plugin. It's for people who want to keep their passwords safe but also easy to remember. Unlike other password managers, ours lets users pick a simple password that they can remember, like "123456," and then it changes it for each website the user uses. This way, the generated password is always safe, and they don't have to remember a hard one for every site.
+Also, we're adding a special feature - Password Safety Checker. Every time the user makes a new password, our plugin will check it with an outside service (External API). This service will tell us if the password is strong enough and if anyone else might have it. This means not only are the encrypted passwords safe with us, but we also check to make sure they're really personalized and no one else's.
