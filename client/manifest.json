@@ -1,0 +1,41 @@
+{
+    "manifest_version": 3,
+    "name": "Security+ Password Manager",
+    "version": "1.0",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "clipboardWrite",
+        "clipboardRead",
+        "identity",
+        "http://127.0.0.1:5000/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"]
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": "icon.png"
+    },
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    },
+    "oauth2": {
+      "client_id": "616979386644-q631gp05jl84popmo485hj8sul6pjuv0.apps.googleusercontent.com",
+      "scopes": [
+          "openid",
+          "email",
+          "profile",
+          "https://www.googleapis.com/auth/userinfo.email"
+      ]
+    }
+  }
+  
