@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, redirect, url_for
+from flask import render_template
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 import bcrypt
@@ -25,7 +26,7 @@ except:
 
 @app.route('/')
 def index():
-    return "Welcome to the Security+ Password Manager"
+    return render_template('index.html')
 
 # OAuth
 oauth = OAuth(app)

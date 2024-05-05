@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ Password Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Security+ Password Manager</h1>
+    <a href="/login" class="button">Login with Google</a>
+    <h2>Save Password</h2>
+    <form id="savePasswordForm">
+        Email: <input type="email" id="email" required><br>
+        Password: <input type="password" id="password" required><br>
+        URL: <input type="text" id="url" required><br>
+        <a href="/encrypt-and-save" class="button">Save Password</a>
+    </form>
+    <h2>Get Encrypted Password</h2>
+    <form id="getPasswordForm">
+        Username: <input type="text" id="username" required><br>
+        Password: <input type="password" id="get_password" required><br>
+        URL: <input type="text" id="get_url" required><br>
+        <a href="/get-password" class="button">Get Password</a>
+    </form>
+    <h2>Check Password Leak</h2>
+    <form id="checkPasswordLeakForm">
+        Password: <input type="password" id="leak_password" required><br>
+        <a href="/check-password-leak" class="button">Get Password</a>
+    </form>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
