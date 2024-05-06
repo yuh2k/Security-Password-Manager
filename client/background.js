@@ -1,6 +1,4 @@
-// background.js
 
-// 背景脚本是长时间运行的，可以用来维护登录状态
 let isLoggedIn = false;
 
 const API_URL = `http://127.0.0.1:5000`;

@@ -20,7 +20,6 @@ document.getElementById('logoutButton').addEventListener('click', function() {
 });
 
 document.getElementById('checkLeak').addEventListener('click', function() {
-    // 获取当前标签页的URL
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         let url = tabs[0].url;
         let password = prompt("Enter the password to check for leaks:");
