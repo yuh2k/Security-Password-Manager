@@ -1,2 +1,4 @@
 .env
 set_secrets.bash
+cert.pem
+key.pem
